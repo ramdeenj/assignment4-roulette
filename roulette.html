@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roulette Simulation</title>
+</head>
+<body>
+    <script>
+        function simulateRouletteSpin() {
+            // Array representing the numbers on the roulette wheel
+            const wheelNumbers = [0, 34, 10, 21, 28, 4, 18, 9, 27, 22, 12, 3, 17, 20, 11, 33, 2, 10, 32, 0o0, 15, 8, 25, 1, 31, 20, 14, 30, 7, 24, 29, 35, 6, 13, 23, 19, 5, 36];
+
+            // Choose a random number from the wheel
+            const randomIndex = Math.floor(Math.random() * wheelNumbers.length);
+            const selectedNumber = wheelNumbers[randomIndex];
+
+            // Determine the color
+            const color = (selectedNumber === 0 || selectedNumber === 0o0) ? 'Rouge/Noir' : (selectedNumber % 2 === 0 ? 'Noir' : 'Rouge');
+
+            // Determine if the number is even or odd
+            const evenOdd = (selectedNumber % 2 === 0) ? 'Pair' : 'Impair';
+
+            // Determine if the number is failed or passed
+            const failedPassed = (selectedNumber >= 1 && selectedNumber <= 18) ? 'Manque' : 'Passe';
+
+            // Print results to console
+            console.log(`The number: ${selectedNumber}`);
+            console.log(`Red/Black: ${color}`);
+            console.log(`Even/Odd: ${evenOdd}`);
+            console.log(`Failed/Passed: ${failedPassed}`);
+        }
+
+        // Call the function to simulate the roulette spin
+        simulateRouletteSpin();
+    </script>
+</body>
+</html>
