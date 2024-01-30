@@ -4,35 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roulette Simulation</title>
-</head>
-<body>
-    <script>
-        function simulateRouletteSpin() {
-            // Array representing the numbers on the roulette wheel
-            const wheelNumbers = [0, 34, 10, 21, 28, 4, 18, 9, 27, 22, 12, 3, 17, 20, 11, 33, 2, 10, 32, 0o0, 15, 8, 25, 1, 31, 20, 14, 30, 7, 24, 29, 35, 6, 13, 23, 19, 5, 36];
 
-            // Choose a random number from the wheel
-            const randomIndex = Math.floor(Math.random() * wheelNumbers.length);
-            const selectedNumber = wheelNumbers[randomIndex];
-
-            // Determine the color
-            const color = (selectedNumber === 0 || selectedNumber === 0o0) ? 'Rouge/Noir' : (selectedNumber % 2 === 0 ? 'Noir' : 'Rouge');
-
-            // Determine if the number is even or odd
-            const evenOdd = (selectedNumber % 2 === 0) ? 'Pair' : 'Impair';
-
-            // Determine if the number is failed or passed
-            const failedPassed = (selectedNumber >= 1 && selectedNumber <= 18) ? 'Manque' : 'Passe';
-
-            // Print results to console
-            console.log(`The number: ${selectedNumber}`);
-            console.log(`Red/Black: ${color}`);
-            console.log(`Even/Odd: ${evenOdd}`);
-            console.log(`Failed/Passed: ${failedPassed}`);
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
         }
 
-        // Call the function to simulate the roulette spin
-        simulateRouletteSpin();
+        button, #result, #history {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <button onclick="spinRoulette()">Spin Roulette</button>
+    <div id="result"></div>
+    <div id="history"></div>
+
+    <script>
+        const wheelNumbers = [0, 34, 10, 21, 28, 4, 18, 9, 27, 22, 12, 3, 17, 20, 11, 33, 2, 10, 32, 0o0, 15, 8, 25, 1, 31, 20, 14, 30, 7, 24, 29, 35, 6, 13, 23, 19, 5, 36];
+        const history = [];
+
+        function simulateRouletteSpin() {
+            const randomIndex = Math.floor(Math.random() * wheelNumbers.length);
+            const selectedNumber = wheelNumbers[randomIndex];
+            const color = (selectedNumber === 0 || selectedNumber === 0o0) ? 'Rouge/Noir' : (selectedNumber % 2 === 0 ? 'Noir' : 'Rouge');
+            const evenOdd = (selectedNumber % 2 === 0) ? 'Pair' : 'Impair';
+            const failedPassed = (selectedNumber >= 1 && selectedNumber <= 18) ? 'Manque' : 'Passe';
+
+            // Add the result to history
+            history.push({
+                number: selectedNumber,
+                color: color,
+                evenOdd: evenOdd,
+                failedPassed: failedPassed
+            });
+
+            // Display results in the browser
+            document.getElementById('result').innerHTML = `The number: ${selectedNumber}<br>Red/Black: ${color}<br>Even/Odd: ${evenOdd}<br>Failed/Passed: ${failedPassed}`;
+
+            // Display history
+            let historyText = '<h3>Spin History:</h3>';
+            history.forEach((spin, index) => {
+                historyText += `<p>Spin ${index + 1}: Number - ${spin.number}, Color - ${spin.color}, Even/Odd - ${spin.evenOdd}, Failed/Passed - ${spin.failedPassed}</p>`;
+            });
+            document.getElementById('history').innerHTML = historyText;
+        }
+
+        function spinRoulette() {
+            simulateRouletteSpin();
+        }
     </script>
 </body>
 </html>
