@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roulette Simulation</title>
+
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        button, #result, #history {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <button onclick="spinRoulette()">Spin Roulette</button>
+    <div id="result"></div>
+    <div id="history"></div>
+
+    <script>
+        const history = [];
+
+        function spinRoulette() {
+            sendSpinEvent(); // Send spin event to WebSocket server
+        }
+
+        function sendSpinEvent() {
+            const socket = new WebSocket("ws://" + document.location.host + "/sock");
+            socket.addEventListener("open", () => {
+                socket.send(JSON.stringify({ action: "spin" }));
+                socket.close();
+            });
+        }
+
+        const socket = new WebSocket("ws://" + document.location.host + "/sock");
+        socket.addEventListener("message", (event) => {
+            const data = JSON.parse(event.data);
+            if (data.action === "spinResult") {
+                const spinResult = data.spinResult;
+                // Update UI with spin result
+                document.getElementById('result').innerHTML = `The number: ${spinResult.number}<br>Red/Black: ${spinResult.color}<br>Even/Odd: ${spinResult.evenOdd}<br>Failed/Passed: ${spinResult.failedPassed}`;
+                // Add spin result to history
+                history.push(spinResult);
+                let historyText = '<h3>Spin History:</h3>';
+                history.forEach((spin, index) => {
+                    historyText += `<p>Spin ${index + 1}: Number - ${spin.number}, Color - ${spin.color}, Even/Odd - ${spin.evenOdd}, Failed/Passed - ${spin.failedPassed}</p>`;
+                });
+                document.getElementById('history').innerHTML = historyText;
+            }
+        });
+    </script>
+</body>
+</html>
